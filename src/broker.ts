@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 
-export default class Broker {
+export class Broker {
   private subsByClientId = new Map<string, Subscription[]>();
   private subsByChannel = new Map<string, Subscription>();
 

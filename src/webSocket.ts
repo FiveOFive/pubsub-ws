@@ -2,7 +2,7 @@ import http from 'http';
 import * as net from 'net';
 import { v4 as uuidv4 } from 'uuid';
 import WebSocket from 'ws';
-import Broker from './broker';
+import { Broker } from './broker';
 
 export function connect(broker: Broker) {
   return (ws: WebSocket, _request: http.IncomingMessage, channel: string): void => {
