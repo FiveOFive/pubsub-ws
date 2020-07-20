@@ -9,7 +9,8 @@
     "clean": "rm -rf lib/",
     "lint": "eslint . --ext .ts --max-warnings=0",
     "test": "jest",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
