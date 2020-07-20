@@ -18,12 +18,12 @@ export function connect(broker: Broker) {
 export function upgrade(wss: WebSocket.Server, authenticate: (request: http.IncomingMessage) => Promise<string>) {
   return (request: http.IncomingMessage, socket: net.Socket, head: Buffer): void => {
     authenticate(request)
-      .then(channel => {
-        wss.handleUpgrade(request, socket, head, (ws) => {
-          wss.emit('connection', ws, request, channel);
-        });
-      })
-      .catch(() => {
+    .then(channel => {
+      wss.handleUpgrade(request, socket, head, (ws) => {
+        wss.emit('connection', ws, request, channel);
+      });
+    })
+    .catch(() => {
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();
       return;
