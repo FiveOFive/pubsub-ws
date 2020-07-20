@@ -6,7 +6,7 @@ import createBroker from '../../src';
 const port = 7123;
 const server = http.createServer();
 
-const broker = createBroker(server, () => 'abc');
+const broker = createBroker(server, () => Promise.resolve('abc'));
 
 const app = express();
 app.post('/publish/:channel', express.text(), (req: Request, res: Response) => {
