@@ -1,5 +1,5 @@
 {
-  "name": "chariots",
+  "name": "ws-pubsub",
   "version": "0.0.1",
   "description": "",
   "main": "lib/src/index.js",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FiveOFive/Chariots.git"
+    "url": "git+https://github.com/FiveOFive/ws-pubsub.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/FiveOFive/Chariots/issues"
+    "url": "https://github.com/FiveOFive/ws-pubsub/issues"
   },
-  "homepage": "https://github.com/FiveOFive/Chariots#readme",
+  "homepage": "https://github.com/FiveOFive/ws-pubsub#readme",
   "devDependencies": {
     "@types/jest": "^26.0.5",
     "@types/node": "^14.0.23",
