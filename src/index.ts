@@ -4,10 +4,14 @@ import WebSocket from 'ws';
 import { connect, upgrade } from './webSocket';
 import Broker from './broker';
 
-export default function main(server: http.Server | https.Server, authenticate: (request: http.IncomingMessage) => string): void {
-  const wss = new WebSocket.Server({ server });
+export default function createBroker(server: http.Server | https.Server, authenticate: (request: http.IncomingMessage) => string): Broker {
+  const wss = new WebSocket.Server({ noServer: true });
   const broker = new Broker();
 
-  wss.on('connection', connect(broker));
-  wss.on('upgrade', upgrade(wss, authenticate));
+  const connectCb = connect(broker);
+  wss.on('connection', connectCb);
+  const upgradeCb = upgrade(wss, authenticate);
+  server.on('upgrade', upgradeCb);
+
+  return broker;
 }

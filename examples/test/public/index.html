@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>Test Example</title>
+
+    <script type="text/javascript">
+      const port = 7123;
+      const socket = new WebSocket('ws://localhost:' + port);
+      socket.onopen = () => {
+        sockLog('WebSocket is open on port ' + port);
+      }
+      socket.onclose = () => {
+        sockLog('WebSocket is closed');
+      }
+      socket.onerror = (event) => {
+        console.log(event);
+      }
+      socket.onmessage = (event) => {
+        sockLog('Message received: ' + event.data);
+      }
+
+      const log = [];
+      function sockLog(line) {
+        log.push(line);
+        document.getElementById('sockLog').innerHTML = log.join('<br />');
+      }
+
+      function publish(event) {
+        event.preventDefault();
+        const pubTxt = document.getElementById('pubTxt');
+        fetch('http://localhost:' + port + '/publish/abc', {method: 'POST', body: pubTxt.value})
+          .catch((err) => console.error(err));
+        pubTxt.value = '';
+      }
+    </script>
+  </head>
+
+  <body>
+    <form onsubmit="return publish(event)">
+      <label>Publish a message to the WebSocket
+        <input id="pubTxt" type="text"></input>
+      </label>
+      <button type="submit">publish</button>
+    </form>
+    WebSocket event log
+    <div id="sockLog" style="border: 1px solid black; padding: 10px;"></div>
+  </body>
+</html>

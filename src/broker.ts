@@ -18,11 +18,12 @@ export default class Broker {
     }
 
     const next = this.subsByChannel.get(channel);
-    const sub = new Subscription(ws, channel, undefined, next?.next);
+    const sub = new Subscription(ws, channel, undefined, next);
     if (next) {
       next.prev = sub;
     }
     this.subsByClientId.get(clientId)?.push(sub);
+    this.subsByChannel.set(channel, sub);
   }
 
   unsubscribeAll(clientId: string): void {
