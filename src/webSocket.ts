@@ -6,18 +6,18 @@ import { Broker } from './broker';
 
 export function connect(broker: Broker) {
   return (ws: WebSocket, _request: http.IncomingMessage, channel: string): void => {
-    const clientId = uuidv4();
-    broker.subscribe(clientId, channel, ws);
+    const wsId = uuidv4();
+    broker.subscribe(wsId, channel, ws);
 
     ws.on('close', () => {
-      broker.unsubscribeAll(clientId);
+      broker.unsubscribeAll(wsId);
     });
   }
 }
 
-export function upgrade(wss: WebSocket.Server, authenticate: (request: http.IncomingMessage) => Promise<string>) {
+export function upgrade(wss: WebSocket.Server, getChannel: (request: http.IncomingMessage) => Promise<string>) {
   return (request: http.IncomingMessage, socket: net.Socket, head: Buffer): void => {
-    authenticate(request)
+    getChannel(request)
     .then(channel => {
       wss.handleUpgrade(request, socket, head, (ws) => {
         wss.emit('connection', ws, request, channel);

@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 
 export class Broker {
-  private subsByClientId = new Map<string, Subscription[]>();
+  private subsByWsId = new Map<string, Subscription[]>();
   private subsByChannel = new Map<string, Subscription>();
 
   publish(channel: string, message: string): void {
@@ -12,9 +12,9 @@ export class Broker {
     }
   }
 
-  subscribe(clientId: string, channel: string, ws: WebSocket): void {
-    if (!this.subsByClientId.get(clientId)) {
-      this.subsByClientId.set(clientId, []);
+  subscribe(wsId: string, channel: string, ws: WebSocket): void {
+    if (!this.subsByWsId.get(wsId)) {
+      this.subsByWsId.set(wsId, []);
     }
 
     const next = this.subsByChannel.get(channel);
@@ -22,12 +22,12 @@ export class Broker {
     if (next) {
       next.prev = sub;
     }
-    this.subsByClientId.get(clientId)?.push(sub);
+    this.subsByWsId.get(wsId)?.push(sub);
     this.subsByChannel.set(channel, sub);
   }
 
-  unsubscribeAll(clientId: string): void {
-    const subs = this.subsByClientId.get(clientId);
+  unsubscribeAll(wsId: string): void {
+    const subs = this.subsByWsId.get(wsId);
     if (subs) {
       subs.forEach(sub => {
         if (!sub.prev && ! sub.next) {
@@ -42,15 +42,15 @@ export class Broker {
         }
       });
     }
-    this.subsByClientId.delete(clientId);
+    this.subsByWsId.delete(wsId);
   }
 
   getSubsByChannel(): Map<string, Subscription> {
     return this.subsByChannel;
   }
 
-  getSubsByClientId(): Map<string, Subscription[]> {
-    return this.subsByClientId;
+  getSubsByWsId(): Map<string, Subscription[]> {
+    return this.subsByWsId;
   }
 }
 

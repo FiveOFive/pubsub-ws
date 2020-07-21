@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import http from 'http';
 import path from 'path';
-import createBroker from '../../src';
+import { createBroker } from '../../src';
 
 const port = 7123;
 const server = http.createServer();
