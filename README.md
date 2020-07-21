@@ -11,7 +11,7 @@ It is written in Typescript and uses the ws package for websockets. The author's
 
 ## Getting Started
 
-Set up an http server for the websockets and create the ws-pubsub broker:
+Set up an http server for the websockets.
 ```javascript
 import http from 'http';
 import WebSocket from 'ws';
@@ -20,20 +20,21 @@ import { createBroker } from 'ws-pubsub';
 // ----- Set up the websocket server and pubsub broker -----
 
 const server = http.createServer(); // https server is also supported
+```
 
-// The second argument is the getChannel function, which is called each time a websocket upgrade request is received.
-// getChannel receives the http request and expects back a channel. The websocket is subscribed to this channel. 
-// We can subscribe all websockets to the same channel (as in this example) or use data in the request to intelligently 
-// subscribe different websockets to different channels. The latter is shown in the authentication example, further 
-// down in the readme.
+Create the ws-pubsub broker.
+
+The second argument to `createBroker` is the getChannel function, which is called each time a websocket upgrade request is received. getChannel receives the http request and expects back a channel. The websocket is subscribed to this channel. We can subscribe all websockets to the same channel (as in this example) or use data in the request to intelligently subscribe different websockets to different channels. The latter is shown in the authentication example, further down in the readme.
+```javascript
 const broker = createBroker(server, (request) => {
   return Promise.resolve('myChannel');
 });
 
 server.listen(7123);
+```
 
-// ----- Test - connect a websocket and publish test data -----
-
+Test by connecting a websocket and publishing data to the channel
+```javascript
 const ws = new WebSocket('ws://localhost:7123');
 ws.on('open', () => console.log('ws open'));
 ws.on('message', (data) => console.log(`received message: ${data}`));
