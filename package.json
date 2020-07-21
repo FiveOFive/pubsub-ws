@@ -1,6 +1,6 @@
 {
   "name": "ws-pubsub",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "lib/src/index.js",
   "type": "lib/src/index.d.ts",
@@ -17,7 +17,7 @@
     "url": "git+https://github.com/FiveOFive/ws-pubsub.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/FiveOFive/ws-pubsub/issues"
   },
