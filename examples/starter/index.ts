@@ -5,9 +5,6 @@ import { createBroker } from '../../src';
 
 const server = http.createServer();
 
-// The second argument is the getChannel function, which is called each time a websocket upgrade request is received.
-// getChannel receives the http request expects back a channel to subscribe the websocket to.
-// getChannel can be used for authentication. See the authentication example.
 const broker = createBroker(server, (_request: http.IncomingMessage) => {
   return Promise.resolve('myChannel');
 });

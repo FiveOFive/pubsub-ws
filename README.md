@@ -22,7 +22,10 @@ import { createBroker } from 'ws-pubsub';
 const server = http.createServer(); // https server is also supported
 
 // The second argument is the getChannel function, which is called each time a websocket upgrade request is received.
-// getChannel receives the http request and expects back a channel. The websocket is subscribed to this channel. We can subscribe all websockets to the same channel (as in this example) or use data in the request to intelligently subscribe different websockets to different channels. The latter is shown in the authentication example, further down in the readme.
+// getChannel receives the http request and expects back a channel. The websocket is subscribed to this channel. 
+// We can subscribe all websockets to the same channel (as in this example) or use data in the request to intelligently 
+// subscribe different websockets to different channels. The latter is shown in the authentication example, further 
+// down in the readme.
 const broker = createBroker(server, (request) => {
   return Promise.resolve('myChannel');
 });
