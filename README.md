@@ -1,6 +1,8 @@
 # ws-pubsub
 
-ws-pubsub is a simple Node JS library for communicating over websockets using the publish-subscribe pattern. It is written in Typescript and uses the ws package for websockets. The author's primary use case was to push real time updates to a web UI for features such as graphs and progress bars. However, it could be used anytime pubsub over websockets is needed. 
+ws-pubsub is a simple Node JS library for communicating over websockets using the publish-subscribe pattern.
+
+It is written in Typescript and uses the ws package for websockets. The author's primary use case was to push real time updates to a web UI for features such as graphs and progress bars. However, it could be used anywhere that pubsub over websockets is needed. 
 
 ## Terminology
 
@@ -66,4 +68,4 @@ const broker = createBroker(server, authenticateAndGetChannel));
 ```
 
 ## More Examples
-[express-shared-port](https://github.com/FiveOFive/ws-pubsub/tree/master/examples/express-shared-port) - Server websockets, APIs, and static files from the same express port. Includes an example of connecting websockets from a frontend html page.
+[express-shared-port](https://github.com/FiveOFive/ws-pubsub/tree/master/examples/express-shared-port) - Websockets, express APIs, and express static files all on the same port (server). Includes an example of connecting websockets from a frontend html page.
