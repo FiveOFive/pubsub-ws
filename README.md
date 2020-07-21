@@ -10,10 +10,10 @@ It is written in Typescript and uses the ws package for websockets. The author's
 * **broker** - The broker maintains the state of which websockets are subscribe to which channels. Each message is published to the broker on a channel. The broker then looks up all websockets currently subscribed to that channel and forwards the message to them. 
 
 ## Getting Started
-Install
+### Install
 `npm i -s pubsub-ws`
 
-Set up an http server for the websockets.
+### Set up an http server for the websockets.
 ```javascript
 import http from 'http';
 import WebSocket from 'ws';
@@ -24,7 +24,7 @@ import { createBroker } from 'pubsub-ws';
 const server = http.createServer(); // https server is also supported
 ```
 
-Create the pubsub-ws broker.
+### Create the pubsub-ws broker.
 
 The second argument to `createBroker` is the getChannel function, which is called each time a websocket upgrade request is received. getChannel receives the http request and expects back a channel. The websocket is subscribed to this channel. We can subscribe all websockets to the same channel (as in this example) or use data in the request to intelligently subscribe different websockets to different channels. The latter is shown in the authentication example, further down in the readme.
 ```javascript
@@ -35,7 +35,7 @@ const broker = createBroker(server, (request) => {
 server.listen(7123);
 ```
 
-Test by connecting a websocket and publishing data to the channel
+### Test by connecting a websocket and publishing data to the channel
 ```javascript
 const ws = new WebSocket('ws://localhost:7123');
 ws.on('open', () => console.log('ws open'));
