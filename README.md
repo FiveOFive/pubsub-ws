@@ -1,6 +1,6 @@
-# ws-pubsub
+# pubsub-ws
 
-ws-pubsub is a simple Node JS library for communicating over websockets using the publish-subscribe pattern.
+pubsub-ws is a simple Node JS library for communicating over websockets using the publish-subscribe pattern.
 
 It is written in Typescript and uses the ws package for websockets. The author's primary use case was to push real time updates to a web UI for features such as graphs and progress bars. However, it could be used anywhere that pubsub over websockets is needed. 
 
@@ -10,19 +10,21 @@ It is written in Typescript and uses the ws package for websockets. The author's
 * **broker** - The broker maintains the state of which websockets are subscribe to which channels. Each message is published to the broker on a channel. The broker then looks up all websockets currently subscribed to that channel and forwards the message to them. 
 
 ## Getting Started
+Install
+`npm i -s pubsub-ws`
 
 Set up an http server for the websockets.
 ```javascript
 import http from 'http';
 import WebSocket from 'ws';
-import { createBroker } from 'ws-pubsub';
+import { createBroker } from 'pubsub-ws';
 
 // ----- Set up the websocket server and pubsub broker -----
 
 const server = http.createServer(); // https server is also supported
 ```
 
-Create the ws-pubsub broker.
+Create the pubsub-ws broker.
 
 The second argument to `createBroker` is the getChannel function, which is called each time a websocket upgrade request is received. getChannel receives the http request and expects back a channel. The websocket is subscribed to this channel. We can subscribe all websockets to the same channel (as in this example) or use data in the request to intelligently subscribe different websockets to different channels. The latter is shown in the authentication example, further down in the readme.
 ```javascript
@@ -50,7 +52,7 @@ The getChannel function (called each time a websocket upgrade request is receive
 
 ```typescript
 import session from 'express-session';
-import { createBroker } from 'ws-pubsub';
+import { createBroker } from 'pubsub-ws';
 
 const sessionParser = session({
   // your session options here
@@ -72,4 +74,4 @@ const broker = createBroker(server, authenticateAndGetChannel));
 ```
 
 ## More Examples
-[express-shared-port](https://github.com/FiveOFive/ws-pubsub/tree/master/examples/express-shared-port) - Websockets, express APIs, and express static files all on the same port (server). Includes an example of connecting websockets from a frontend html page.
+[express-shared-port](https://github.com/FiveOFive/pubsub-ws/tree/master/examples/express-shared-port) - Websockets, express APIs, and express static files all on the same port (server). Includes an example of connecting websockets from a frontend html page.
