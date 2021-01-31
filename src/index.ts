@@ -1,16 +1,22 @@
 import http from 'http';
 import https from 'https';
 import WebSocket from 'ws';
-import { connect, upgrade } from './webSocket';
+import { connect, MessageHandler, upgrade } from './webSocket';
 import { Broker } from './broker';
 
-export function createBroker(server: http.Server | https.Server, getChannel: (request: http.IncomingMessage) => Promise<string>): Broker {
+export interface BrokerOptions {
+  getChannel?: (request: http.IncomingMessage) => Promise<string>;
+  messageHandler?: MessageHandler;
+}
+
+export function createBroker(
+  server: http.Server | https.Server, options?: BrokerOptions): Broker {
   const wss = new WebSocket.Server({ noServer: true });
   const broker = new Broker();
 
-  const connectCb = connect(broker);
+  const connectCb = connect(broker, options?.messageHandler);
   wss.on('connection', connectCb);
-  const upgradeCb = upgrade(wss, getChannel);
+  const upgradeCb = upgrade(wss, options?.getChannel);
   server.on('upgrade', upgradeCb);
 
   return broker;
