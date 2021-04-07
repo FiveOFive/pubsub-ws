@@ -6,21 +6,18 @@ import { App } from './app';
 
 export interface AuthenticatedWS extends WebSocket {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  user?: any;
-  id?: string;
+  user: any; // TODO - parametrize the user object
+  id: string;
 }
 
 export function connect(app: App) {
   return (ws: AuthenticatedWS, _request: http.IncomingMessage, initChannels: string[]): void => {
-    const wsId = uuidv4();
-    ws.id = wsId;
-
     for (const chan of initChannels) {
-      app.broker.subscribe(wsId, chan, ws);
+      app.broker.subscribe(ws.id, chan, ws);
     }
 
     ws.on('close', () => {
-      app.broker.unsubscribeAll(wsId);
+      app.broker.unsubscribeAll(ws.id);
     });
 
     ws.on('message', (message) => {
@@ -61,8 +58,9 @@ export function upgrade(
     if (initChannels) {
       channels.push(...(await initChannels()));
     }
-    wss.handleUpgrade(request, socket, head, (ws: AuthenticatedWS) => {
-      ws.user = user;
+    wss.handleUpgrade(request, socket, head, (ws: WebSocket) => {
+      (ws as AuthenticatedWS).id = uuidv4();
+      (ws as AuthenticatedWS).user = user;
       wss.emit('connection', ws, request, channels);
     });
   }
