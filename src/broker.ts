@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
 
+// TODO - unit tests
 export class Broker {
   private subsByWsId = new Map<string, Subscription[]>();
   private subsByChannel = new Map<string, Subscription>();
@@ -26,18 +27,22 @@ export class Broker {
     this.subsByChannel.set(channel, sub);
   }
 
+  // TODO - review linked list algos and clean up
   unsubscribeAll(wsId: string): void {
     const subs = this.subsByWsId.get(wsId);
     if (subs) {
       subs.forEach(sub => {
-        if (!sub.prev && ! sub.next) {
+        if (!sub.prev && !sub.next) {
           this.subsByChannel.delete(sub.channel);
         } else {
           if (sub.prev) {
-            sub.prev = sub.next;
+            sub.prev.next = sub.next;
           }
           if (sub.next) {
-            sub.next = sub.prev;
+            sub.next.prev = sub.prev;
+          }
+          if (!sub.prev && sub.next) {
+            this.subsByChannel.set(sub.channel, sub.next);
           }
         }
       });
