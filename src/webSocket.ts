@@ -10,7 +10,7 @@ export function connect(broker: Broker) {
     broker.subscribe(wsId, channel, ws);
 
     ws.on('close', () => {
-      broker.unsubscribeAll(wsId);
+      broker.unsubscribeAllChannels(wsId);
     });
   }
 }

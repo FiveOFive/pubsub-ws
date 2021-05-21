@@ -18,7 +18,7 @@ export class Broker {
     }
 
     const next = this.subsByChannel.get(channel);
-    const sub = new Subscription(ws, channel, undefined, next);
+    const sub = new Subscription(wsId, ws, channel, undefined, next);
     if (next) {
       next.prev = sub;
     }
@@ -26,18 +26,24 @@ export class Broker {
     this.subsByChannel.set(channel, sub);
   }
 
-  unsubscribeAll(wsId: string): void {
+  /**
+   * Unsubscribe all channels for one websocket
+   */
+  unsubscribeAllChannels(wsId: string): void {
     const subs = this.subsByWsId.get(wsId);
     if (subs) {
       subs.forEach(sub => {
-        if (!sub.prev && ! sub.next) {
+        if (!sub.prev && !sub.next) {
           this.subsByChannel.delete(sub.channel);
         } else {
           if (sub.prev) {
-            sub.prev = sub.next;
+            sub.prev.next = sub.next;
           }
           if (sub.next) {
-            sub.next = sub.prev;
+            sub.next.prev = sub.prev;
+          }
+          if (!sub.prev && sub.next) {
+            this.subsByChannel.set(sub.channel, sub.next);
           }
         }
       });
@@ -55,12 +61,14 @@ export class Broker {
 }
 
 class Subscription {
+  wsId: string;
   ws: WebSocket;
   channel: string;
   prev: Subscription | undefined;
   next: Subscription | undefined;
 
-  constructor(ws: WebSocket, channel: string, prev: Subscription | undefined, next: Subscription | undefined) {
+  constructor(wsId: string, ws: WebSocket, channel: string, prev: Subscription | undefined, next: Subscription | undefined) {
+    this.wsId = wsId;
     this.ws = ws;
     this.channel = channel;
     this.prev = prev;
