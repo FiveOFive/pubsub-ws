@@ -12,6 +12,10 @@ export function connect(broker: Broker) {
     ws.on('close', () => {
       broker.unsubscribeAllChannels(wsId);
     });
+
+    ws.on('error', (err) => {
+      console.log(err);
+    });
   }
 }
 
