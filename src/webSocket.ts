@@ -21,6 +21,11 @@ export function connect(broker: Broker) {
 
 export function upgrade(wss: WebSocket.Server, getChannel: (request: http.IncomingMessage) => Promise<string>) {
   return (request: http.IncomingMessage, socket: net.Socket, head: Buffer): void => {
+    socket.on('error', (err) => {
+      console.log('socket error');
+      console.log(err);
+    });
+
     getChannel(request)
     .then(channel => {
       wss.handleUpgrade(request, socket, head, (ws) => {
