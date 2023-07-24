@@ -4,6 +4,10 @@ export class Broker {
   private subsByWsId = new Map<string, Subscription[]>();
   private subsByChannel = new Map<string, Subscription>();
 
+  constructor() {
+    this.heartbeat();
+  }
+
   publish(channel: string, message: string): void {
     let sub = this.subsByChannel.get(channel);
     while (sub) {
@@ -57,6 +61,19 @@ export class Broker {
 
   getSubsByWsId(): Map<string, Subscription[]> {
     return this.subsByWsId;
+  }
+
+  private heartbeat() {
+    for (const subs of this.subsByWsId.values()) {
+      for (const sub of subs) {
+        try {
+          sub.send('HEARTBEAT');
+        } catch(err) {
+          // continue
+        }
+      }
+    }
+    setTimeout(() => this.heartbeat(), 120_000);
   }
 }
 
