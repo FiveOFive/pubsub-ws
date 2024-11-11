@@ -2,7 +2,6 @@ type LogMessage = string | Error | object;
 type LogOptionalParams = string | object;
 
 export interface Logger {
-  log: (message: LogMessage, ...optionalParams: LogOptionalParams[]) => void;
   debug: (message: LogMessage, ...optionalParams: LogOptionalParams[]) => void; 
   info: (message: LogMessage, ...optionalParams: LogOptionalParams[]) => void;
   warn: (message: LogMessage, ...optionalParams: LogOptionalParams[]) => void;
@@ -10,9 +9,6 @@ export interface Logger {
 }
 
 export const consoleLogger: Logger = {
-  log: function (message: LogMessage, ...optionalParams: LogOptionalParams[]): void {
-    console.log(message, optionalParams);
-  },
   debug: function (message: LogMessage, ...optionalParams: LogOptionalParams[]): void {
     console.log(message, optionalParams);
   },
