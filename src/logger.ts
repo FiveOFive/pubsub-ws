@@ -1,24 +1,42 @@
-type LogMessage = string | Error | object;
-type LogOptionalParams = string | object;
+interface LogFunction {
+  (message: string): void;
+  (obj: object, message?: string): void;
+}
 
 export interface Logger {
-  debug: (message: LogMessage, ...optionalParams: LogOptionalParams[]) => void; 
-  info: (message: LogMessage, ...optionalParams: LogOptionalParams[]) => void;
-  warn: (message: LogMessage, ...optionalParams: LogOptionalParams[]) => void;
-  error: (message: LogMessage, ...optionalParams: LogOptionalParams[]) => void;
+  debug: LogFunction;
+  info: LogFunction;
+  warn: LogFunction;
+  error: LogFunction;
 }
 
 export const consoleLogger: Logger = {
-  debug: function (message: LogMessage, ...optionalParams: LogOptionalParams[]): void {
-    console.log(message, optionalParams);
+  debug: (objOrMsg: object | string, message?: string) => {
+    if (typeof objOrMsg === 'string') {
+      console.log(message);
+    } else {
+      console.log(objOrMsg, message);
+    }
   },
-  info: function (message: LogMessage, ...optionalParams: LogOptionalParams[]): void {
-    console.log(message, optionalParams);
+  info: (objOrMsg: object | string, message?: string) => {
+    if (typeof objOrMsg === 'string') {
+      console.log(message);
+    } else {
+      console.log(objOrMsg, message);
+    }
   },
-  warn: function (message: LogMessage, ...optionalParams: LogOptionalParams[]): void {
-    console.warn(message, optionalParams);
+  warn: (objOrMsg: object | string, message?: string) => {
+    if (typeof objOrMsg === 'string') {
+      console.warn(message);
+    } else {
+      console.warn(objOrMsg, message);
+    }
   },
-  error: function (message: LogMessage, ...optionalParams: LogOptionalParams[]): void {
-    console.error(message, optionalParams);
+  error: (objOrMsg: object | string, message?: string) => {
+    if (typeof objOrMsg === 'string') {
+      console.error(message);
+    } else {
+      console.error(objOrMsg, message);
+    }
   },
 }
