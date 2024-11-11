@@ -3,8 +3,9 @@ import * as net from 'net';
 import { v4 as uuidv4 } from 'uuid';
 import WebSocket from 'ws';
 import { Broker } from './broker';
+import { Logger } from './logger';
 
-export function connect(broker: Broker) {
+export function connect(broker: Broker, logger: Logger) {
   return (ws: WebSocket, _request: http.IncomingMessage, channel: string): void => {
     const wsId = uuidv4();
     broker.subscribe(wsId, channel, ws);
@@ -14,16 +15,21 @@ export function connect(broker: Broker) {
     });
 
     ws.on('error', (err) => {
-      console.log(err);
+      logger.error(err, `ws.on('error')`);
     });
   }
 }
 
-export function upgrade(wss: WebSocket.Server, getChannel: (request: http.IncomingMessage) => Promise<string>) {
+export function upgrade(wss: WebSocket.Server, getChannel: (request: http.IncomingMessage) => Promise<string>, logger: Logger) {
   return (request: http.IncomingMessage, socket: net.Socket, head: Buffer): void => {
     socket.on('error', (err) => {
-      console.log('socket error');
-      console.log(err);
+      if (isEconnreset(err)) {
+        // ECONNRESET occurs whenever the socket is broken, such as a page reload.
+        // This is expected because clients don't stay connected indefinitely.
+        logger.debug(err, `socket.on('error')`);
+      } else {
+        logger.error(err, `socket.on('error')`);
+      }
     });
 
     getChannel(request)
@@ -38,4 +44,8 @@ export function upgrade(wss: WebSocket.Server, getChannel: (request: http.Incomi
       return;
     });
   }
+}
+
+function isEconnreset(err: unknown): err is { code: 'ECONNRESET' } {
+  return typeof err === 'object' && (err as { code: 'ECONNRESET' })?.code === 'ECONNRESET';
 }

@@ -1,6 +1,6 @@
 {
   "name": "pubsub-ws",
-  "version": "2.0.1-beta.1",
+  "version": "2.0.1-beta.2",
   "description": "",
   "main": "lib/src/index.js",
   "type": "lib/src/index.d.ts",
