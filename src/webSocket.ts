@@ -5,8 +5,8 @@ import WebSocket from 'ws';
 import { Broker } from './broker';
 import { Logger } from './logger';
 
-export function connect(broker: Broker, logger: Logger) {
-  return (ws: WebSocket, _request: http.IncomingMessage, channel: string): void => {
+export function connect<T extends http.IncomingMessage>(broker: Broker, logger: Logger) {
+  return (ws: WebSocket, _request: T, channel: string): void => {
     const wsId = uuidv4();
     broker.subscribe(wsId, channel, ws);
 
@@ -20,8 +20,8 @@ export function connect(broker: Broker, logger: Logger) {
   }
 }
 
-export function upgrade(wss: WebSocket.Server, getChannel: (request: http.IncomingMessage) => Promise<string>, logger: Logger) {
-  return (request: http.IncomingMessage, socket: net.Socket, head: Buffer): void => {
+export function upgrade<T extends http.IncomingMessage>(wss: WebSocket.Server, getChannel: (request: T) => Promise<string>, logger: Logger) {
+  return (request: T, socket: net.Socket, head: Buffer): void => {
     socket.on('error', (err) => {
       if (isEconnreset(err)) {
         // ECONNRESET occurs whenever the socket is broken, such as a page reload.
