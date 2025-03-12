@@ -35,7 +35,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "uuid": "^9.0.1",
     "ws": "^8.18.0"
   },
   "peerDependencies": {

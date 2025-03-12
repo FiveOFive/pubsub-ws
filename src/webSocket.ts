@@ -1,13 +1,13 @@
 import http from 'http';
 import * as net from 'net';
-import { v4 as uuidv4 } from 'uuid';
 import WebSocket from 'ws';
 import { Broker } from './broker';
 import { Logger } from './logger';
+import crypto from 'crypto';
 
 export function connect<T extends http.IncomingMessage>(broker: Broker, logger: Logger) {
   return (ws: WebSocket, _request: T, channel: string): void => {
-    const wsId = uuidv4();
+    const wsId = crypto.randomUUID();
     broker.subscribe(wsId, channel, ws);
 
     ws.on('close', () => {
