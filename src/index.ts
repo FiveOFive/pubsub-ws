@@ -1,11 +1,11 @@
 import http from 'http';
 import WebSocket from 'ws';
 import { connect, upgrade } from './webSocket';
-import { Broker } from './broker';
+import { Broker, BrokerOptions } from './broker';
 import { consoleLogger, Logger } from './logger';
 import * as net from 'net';
 
-export function createBroker<T extends http.IncomingMessage>(server: PubSubServer<T>, getChannel: (request: T) => Promise<string>, logger: Logger = consoleLogger): Broker {
+export function createBroker<T extends http.IncomingMessage>(server: PubSubServer<T>, getChannel: (request: T) => Promise<string>, logger: Logger = consoleLogger, options: BrokerOptions = {}): Broker {
   const wss = new WebSocket.Server({ noServer: true });
   const broker = new Broker();
 

@@ -1,10 +1,14 @@
 import WebSocket from 'ws';
 
+export interface BrokerOptions {
+  heartbeatInterval?: number; // in milliseconds
+  heartbeatMessage?: string;
+}
 export class Broker {
   private subsByWsId = new Map<string, Subscription[]>();
   private subsByChannel = new Map<string, Subscription>();
 
-  constructor() {
+  constructor(private options: BrokerOptions = {}) {
     this.heartbeat();
   }
 
@@ -67,13 +71,13 @@ export class Broker {
     for (const subs of this.subsByWsId.values()) {
       for (const sub of subs) {
         try {
-          sub.send('HEARTBEAT');
+          sub.send(this.options.heartbeatMessage || 'HEARTBEAT');
         } catch(err) {
           // continue
         }
       }
     }
-    setTimeout(() => this.heartbeat(), 120_000);
+    setTimeout(() => this.heartbeat(), this.options.heartbeatInterval || 120_000);
   }
 }
 
